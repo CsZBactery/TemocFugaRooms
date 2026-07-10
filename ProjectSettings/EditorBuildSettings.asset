@@ -8,6 +8,9 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Escenas/Menu.unity
     guid: 202f623e666f4c64a81cd5ee1320118d
+  - enabled: 1
+    path: Assets/Escenas/TercerPiso_Greybox.unity
+    guid: 966bfc52cd69ef347ac77a5b3cc758c0
   m_configObjects:
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 052faaac586de48259a63d0c4782560b, type: 3}
   m_UseUCBPForAssetBundles: 0

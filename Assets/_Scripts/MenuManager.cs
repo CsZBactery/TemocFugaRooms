@@ -4,7 +4,8 @@ using UnityEngine.SceneManagement;
 public class MenuManager : MonoBehaviour
 {
     [Header("Configuración de UI")]
-    // Esta variable nos permitirá encender y apagar el panel visual de opciones
+    // Ahora tenemos dos variables: una para tu menú de inicio y otra para las opciones
+    public GameObject menuPrincipal;
     public GameObject panelOpciones;
 
     void Start()
@@ -13,42 +14,45 @@ public class MenuManager : MonoBehaviour
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
 
-        // Aseguramos que el panel de opciones empiece apagado al cargar el menú
+        // Le decimos a Unity que al darle Play, el menú principal DEBE estar encendido...
+        if (menuPrincipal != null)
+        {
+            menuPrincipal.SetActive(true);
+        }
+
+        // ...y el panel de opciones DEBE estar apagado
         if (panelOpciones != null)
         {
             panelOpciones.SetActive(false);
         }
     }
 
-    // Este método lo llamará el botón "Jugar"
     public void Jugar()
     {
-        // Opción A (Activada): Carga la escena que esté justo después del menú.
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
     }
 
-    // Este método lo llamará el botón "Opciones"
     public void AbrirOpciones()
     {
-        if (panelOpciones != null)
-        {
-            panelOpciones.SetActive(true); // Muestra el panel
-        }
+        // Al abrir opciones, apagamos el menú principal para que no estorbe
+        if (menuPrincipal != null) menuPrincipal.SetActive(false);
+
+        // Y prendemos el panel de opciones
+        if (panelOpciones != null) panelOpciones.SetActive(true);
     }
 
-    // Este método lo llamará un botón de "Volver" o "Cerrar" dentro del panel de opciones
     public void CerrarOpciones()
     {
-        if (panelOpciones != null)
-        {
-            panelOpciones.SetActive(false); // Oculta el panel
-        }
+        // Al cerrar opciones, hacemos lo contrario: apagamos opciones
+        if (panelOpciones != null) panelOpciones.SetActive(false);
+
+        // Y volvemos a prender el menú principal
+        if (menuPrincipal != null) menuPrincipal.SetActive(true);
     }
 
-    // Este método lo llamará el botón "Salir"
     public void Salir()
     {
         Debug.Log("El jugador ha salido del juego.");
-        Application.Quit(); // Cierra el juego en la build final
+        Application.Quit();
     }
 }
