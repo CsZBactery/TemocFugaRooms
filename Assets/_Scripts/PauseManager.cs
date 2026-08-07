@@ -1,6 +1,6 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using UnityEngine.UI; // Necesario para el Slider
+using UnityEngine.UI;
 
 public class PauseManager : MonoBehaviour
 {
@@ -10,6 +10,10 @@ public class PauseManager : MonoBehaviour
 
     [Header("Configuración de Audio")]
     public Slider audioSlider;
+
+    [Header("Control del Jugador/Cámara")]
+    [Tooltip("Arrastra aquí el script que mueve la cámara para desactivarlo al pausar")]
+    public MonoBehaviour scriptCamara; // Referencia al script que controla tu vista
 
     private bool juegoPausado = false;
 
@@ -42,6 +46,9 @@ public class PauseManager : MonoBehaviour
 
         if (panelPausa != null) panelPausa.SetActive(true);
 
+        // Desactivamos el script de la cámara para que no puedas mirar a los lados
+        if (scriptCamara != null) scriptCamara.enabled = false;
+
         // Actualizamos el slider al valor actual cuando pausamos
         if (audioSlider != null && AudioManager.Instancia != null)
         {
@@ -59,6 +66,9 @@ public class PauseManager : MonoBehaviour
 
         if (panelPausa != null) panelPausa.SetActive(false);
         if (panelAjustes != null) panelAjustes.SetActive(false);
+
+        // Volvemos a activar el script de la cámara
+        if (scriptCamara != null) scriptCamara.enabled = true;
     }
 
     public void AbrirAjustes()
@@ -74,7 +84,6 @@ public class PauseManager : MonoBehaviour
 
     public void CerrarAjustes()
     {
-        // Si el jugador cancela, regresamos el slider al último guardado
         if (audioSlider != null && AudioManager.Instancia != null)
         {
             audioSlider.value = AudioManager.Instancia.volumenGuardadoEnSesion;
@@ -84,8 +93,6 @@ public class PauseManager : MonoBehaviour
         if (panelAjustes != null) panelAjustes.SetActive(false);
         if (panelPausa != null) panelPausa.SetActive(true);
     }
-
-    // --- FUNCIONES DE AUDIO PARA EL MENÚ DE PAUSA ---
 
     public void AplicarAjustes()
     {
