@@ -33,8 +33,9 @@ public class PlayerInteraction : MonoBehaviour
         {
             // Verificamos si el objeto tiene CUALQUIERA de nuestros scripts interactuables
             bool esInteractuable = hit.collider.GetComponentInParent<Door>() != null ||
-                                   hit.collider.GetComponentInParent<KeycardReader>() != null ||
-                                   hit.collider.GetComponentInParent<KeycardPickup>() != null;
+                       hit.collider.GetComponentInParent<KeycardReader>() != null ||
+                       hit.collider.GetComponentInParent<KeycardPickup>() != null ||
+                       hit.collider.GetComponentInParent<ProjectorInteractable>() != null;
 
             // Si es interactuable, mostramos la UI. Si no, la ocultamos.
             if (uiPrompt != null)
@@ -103,6 +104,14 @@ public class PlayerInteraction : MonoBehaviour
             {
                 // Pasa el inventario que obtuvimos al principio de TryInteract
                 lector.EscanearTarjeta(inventory);
+            }
+
+            // Detección del Proyector
+            ProjectorInteractable proyector = hit.collider.GetComponentInParent<ProjectorInteractable>();
+            if (proyector != null)
+            {
+                proyector.Interact();
+                return;
             }
         }
     }
