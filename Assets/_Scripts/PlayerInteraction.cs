@@ -1,20 +1,54 @@
 using UnityEngine;
+using UnityEngine.UI; // Importante para controlar la UI
 
 public class PlayerInteraction : MonoBehaviour
 {
     [Header("Configuración de Interacción")]
-    [Tooltip("Distancia máxima en metros a la que el jugador puede interactuar")]
     public float interactionDistance = 3f;
+    public LayerMask interactableLayer = ~0;
 
-    [Tooltip("Capa de objetos con los que puede interactuar")]
-    public LayerMask interactableLayer = ~0; // Todo por defecto
+    [Header("UI de Interacción")]
+    [Tooltip("Arrastra aquí el objeto 'InteractionPrompt' del Canvas")]
+    public GameObject uiPrompt; // La referencia al círculo con la E
 
-    void Update()
+    private void Update()
     {
+        // 1. SIEMPRE VERIFICAMOS SI ESTAMOS MIRANDO ALGO INTERACTUABLE
+        CheckForInteractable();
+
         // Al presionar la tecla E
         if (Input.GetKeyDown(KeyCode.E))
         {
             TryInteract();
+        }
+    }
+
+    void CheckForInteractable()
+    {
+        Ray ray = new Ray(transform.position, transform.forward);
+        RaycastHit hit;
+
+        // Lanzamos el rayo para ver si hay algo
+        if (Physics.Raycast(ray, out hit, interactionDistance, interactableLayer))
+        {
+            // Verificamos si el objeto tiene CUALQUIERA de nuestros scripts interactuables
+            bool esInteractuable = hit.collider.GetComponentInParent<Door>() != null ||
+                                   hit.collider.GetComponentInParent<KeycardReader>() != null ||
+                                   hit.collider.GetComponentInParent<KeycardPickup>() != null;
+
+            // Si es interactuable, mostramos la UI. Si no, la ocultamos.
+            if (uiPrompt != null)
+            {
+                uiPrompt.SetActive(esInteractuable);
+            }
+        }
+        else
+        {
+            // Si el rayo no choca con nada, ocultamos la UI
+            if (uiPrompt != null)
+            {
+                uiPrompt.SetActive(false);
+            }
         }
     }
 
@@ -47,11 +81,28 @@ public class PlayerInteraction : MonoBehaviour
                 door.Interact();
             }
 
+            Debug.Log("El rayo golpeó a: " + hit.collider.name);
+
+            // 1. Obtener el inventario del jugador (asumiendo que este script está en el hijo de la cámara o el padre del jugador)
+            PlayerInventory inventory = GetComponentInParent<PlayerInventory>();
+            if (inventory == null) inventory = GetComponentInChildren<PlayerInventory>();
+
+
+            // NUEVO: Detección para recoger la Credencial Física
+            KeycardPickup pickup = hit.collider.GetComponentInParent<KeycardPickup>();
+            if (pickup != null)
+            {
+                // Llama a la función de interacción de la tarjeta y le pasa el inventario
+                pickup.Interact(inventory);
+                return; // Terminamos la interacción aquí para no intentar abrir puertas al mismo tiempo
+            }
+
             // Detección de Lector de Tarjeta
             KeycardReader lector = hit.collider.GetComponentInParent<KeycardReader>();
             if (lector != null)
             {
-                lector.EscanearTarjeta();
+                // Pasa el inventario que obtuvimos al principio de TryInteract
+                lector.EscanearTarjeta(inventory);
             }
         }
     }

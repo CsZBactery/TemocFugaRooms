@@ -9,9 +9,10 @@ public class KeycardReader : MonoBehaviour
     [Tooltip("Marca esto si el jugador ya recogió la tarjeta para probar")]
     public bool tieneTarjeta = true;
 
-    public void EscanearTarjeta()
+    public void EscanearTarjeta(PlayerInventory inventory)
     {
-        if (tieneTarjeta)
+        // Verifica si el objeto inventario existe Y si tiene la tarjeta
+        if (inventory != null && inventory.tieneCredencialEscolar)
         {
             Debug.Log("💳 ¡Credencial Aceptada! Abriendo puerta de acceso...");
             if (puertaCorrediza != null)
@@ -21,7 +22,9 @@ public class KeycardReader : MonoBehaviour
         }
         else
         {
-            Debug.Log("❌ Acceso Denegado: Requiere Credencial Escolar.");
+            Debug.Log("❌ Acceso Denegado: Requiere Credencial Escolar Física.");
+            // Aquí podrías poner un sonido de error
         }
     }
+
 }
