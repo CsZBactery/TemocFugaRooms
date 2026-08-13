@@ -39,6 +39,14 @@ public class Door : MonoBehaviour
         Debug.Log(isOpen ? "Puerta Abierta" : "Puerta Cerrada");
     }
 
+    public void AbrirPorGuardia()
+    {
+        if (!isOpen)
+        {
+            Interact(); // Solo la abre si está cerrada
+        }
+    }
+
     private IEnumerator AnimateDoor(Quaternion target)
     {
         while (Quaternion.Angle(transform.localRotation, target) > 0.1f)
