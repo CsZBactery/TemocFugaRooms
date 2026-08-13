@@ -13,6 +13,19 @@ public class PlayerInteraction : MonoBehaviour
 
     private void Update()
     {
+        // --------------------------------------------------------
+        // FIX DE PAUSA: Si el juego está pausado, apagamos la "E"
+        // y nos salimos del Update para no detectar clics ni rayos.
+        // --------------------------------------------------------
+        if (MenuPausa.JuegoPausado)
+        {
+            if (uiPrompt != null)
+            {
+                uiPrompt.SetActive(false); // Forzamos que se apague
+            }
+            return;
+        }
+
         // 1. SIEMPRE VERIFICAMOS SI ESTAMOS MIRANDO ALGO INTERACTUABLE
         CheckForInteractable();
 

@@ -36,6 +36,15 @@ public class PlayerController : MonoBehaviour
 
     void Update()
     {
+        // --------------------------------------------------------
+        // FIX DE PAUSA: Si el juego está pausado, salimos del Update
+        // para que la cámara no se mueva ni se gaste estamina.
+        // --------------------------------------------------------
+        if (MenuPausa.JuegoPausado)
+        {
+            return;
+        }
+
         HandleMouseLook();
         HandleMovement();
         HandleStamina();
