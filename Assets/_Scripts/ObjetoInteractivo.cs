@@ -1,14 +1,22 @@
 using UnityEngine;
+using UnityEngine.Events;
 
 public class ObjetoInteractivo : MonoBehaviour
 {
-    [Tooltip("El texto que aparecerá en el panel para este objeto específico")]
-    public string mensajePersonalizado = "Abrir Puerta";
+    [Header("Mensaje UI")]
+    [Tooltip("El texto que saldrá en pantalla. Ej: 'Abrir Puerta'")]
+    public string mensajePersonalizado = "Interactuar";
 
-    // Esta función se llamará cuando el jugador presione la 'E'
+    [Header("Evento de Interacción")]
+    [Tooltip("La función que se ejecutará al presionar E")]
+    public UnityEvent alInteractuar;
+
     public void Interactuar()
     {
-        // Aquí irá la lógica de abrir la puerta, agarrar un objeto, etc.
-        Debug.Log("Has interactuado con: " + gameObject.name);
+        // Llama a la función asignada desde el Inspector
+        if (alInteractuar != null)
+        {
+            alInteractuar.Invoke();
+        }
     }
 }
