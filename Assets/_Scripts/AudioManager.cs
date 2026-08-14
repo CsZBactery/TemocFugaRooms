@@ -18,7 +18,7 @@ public class AudioManager : MonoBehaviour
         if (Instancia == null)
         {
             Instancia = this;
-            DontDestroyOnLoad(gameObject);
+            // Se eliminó la línea DontDestroyOnLoad(gameObject);
         }
         else
         {
