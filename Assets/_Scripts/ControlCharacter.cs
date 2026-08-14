@@ -13,7 +13,10 @@ public class PlayerController : MonoBehaviour
     public float maxStamina = 100f;
     public float staminaDrain = 25f;
     public float staminaRegen = 15f;
-    private float currentStamina;
+    
+    // CAMBIO APLICADO: Ahora es public para que la UI pueda leerla
+    public float currentStamina; 
+    
     private bool isFatigued = false;
 
     [Header("Cámara (Mouse Look)")]
